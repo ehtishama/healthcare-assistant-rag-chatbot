@@ -1,0 +1,70 @@
+rest 
+
+
+PDf RAG 
+
+pdf + query => reads the pdf, extracts parts of the pdf => query, pdf => gpt => response
+
+
+------------------------------------------------------------------------------------------
+
+
+dataset => openly => health related 
+
+user input
+
+hey, i think i am feeling a headache, with high temprature, and feeling really cold, waht coul
+
+headache, high temprateu, 
+
+RAG => (bundle) => GPT => things that suggest the user to do
+
+take some rest, take paracemtol, see a gp
+
+api wrapper => /suggest
+
+------------------------------------------------------------------------------------------
+
+datasource => RAG
+
+front end
+html, css, js,
+
+
+react => axios, get, put, post
+
+fetch(), mdn
+
+type -> send -> api call
+displayed
+
+------------------------------------------------------------------------------------------
+
+web scraping
+
+beautiful soup => python 
+
+scrape(https://www.nhs.uk/conditions/back-pain/)
+all content of a page
+
+give me all the a tag
+content.a
+
+urls = [
+1, 2, 3,4
+
+]
+
+link at page 1
+
+use painkillers such as paracetamol or ibuprofen (children under 16 should not take aspirin)
+
+place a warm or cold flannel on the ear
+
+remove any discharge by wiping the ear with cotton wool
+
+save into indiviaul files 
+
+
+
+

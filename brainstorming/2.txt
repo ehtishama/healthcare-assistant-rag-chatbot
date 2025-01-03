@@ -1,0 +1,30 @@
+web scraping
+
+beautiful soup => python 
+
+scrape(https://www.nhs.uk/conditions/back-pain/)
+all content of a page
+
+give me all the a tag
+content.a
+
+urls = [
+1, 2, 3,4
+
+]
+
+link at page 1
+
+use painkillers such as paracetamol or ibuprofen (children under 16 should not take aspirin)
+
+place a warm or cold flannel on the ear
+
+remove any discharge by wiping the ear with cotton wool
+
+save into indiviaul files 
+
+/data-scraping
+
+python, beautiful soup
+
+use mongo db atlas
