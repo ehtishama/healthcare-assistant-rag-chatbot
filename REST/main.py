@@ -1,14 +1,10 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
-from typing import List
-
 
 class MessageQuery(BaseModel):
     message: str
 
-
 app = FastAPI()
-
 
 hardcoded_responses = {
     "fever": "You might be experiencing the early stages of flu or a viral infection.",

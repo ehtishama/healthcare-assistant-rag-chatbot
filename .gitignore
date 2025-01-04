@@ -1,0 +1,6 @@
+.venv
+
+ScrappedPDFs
+.env
+.git
+__pycache__

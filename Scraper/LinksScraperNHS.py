@@ -1,10 +1,8 @@
 import os
 import re
 
-from reportlab.lib.pagesizes import letter
-from reportlab.pdfgen import canvas
 from bs4 import BeautifulSoup
-from fpdf import FPDF
+
 import requests
 
 """
