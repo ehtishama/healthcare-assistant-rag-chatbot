@@ -1,0 +1,42 @@
+@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap");
+
+/* Tailwind CSS layers */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom styles using @layer */
+@layer utilities {
+  @keyframes dot-bounce {
+    0% {
+      transform:  translateY(0);
+    }
+    50% {
+      transform:  translateY(-8px);
+    }
+    100% {
+      transform:  translateY(0);
+    }
+  }
+
+  /* Utility class for bouncing animation */
+  .animate-dot-bounce {
+    animation: dot-bounce 1s infinite ease-in-out;
+  }
+
+  /* Utility classes for staggered delays */
+  .delay-200 {
+    animation-delay: 200ms;
+  }
+  .delay-300 {
+    animation-delay: 300ms;
+  }
+  .delay-400 {
+    animation-delay: 400ms;
+  }
+}
+
+/* Global font family */
+* {
+  font-family: "Plus Jakarta Sans", serif;
+}
