@@ -1,6 +1,10 @@
 .venv
 
 ScrappedPDFs
+Ignore_JustLinks
 .env
 .git
 __pycache__
+
+Ignore_MakesFourLinkFiles.py
+Ignore_scraperTest.py
