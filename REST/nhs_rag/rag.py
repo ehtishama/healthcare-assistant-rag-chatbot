@@ -1,46 +1,48 @@
-
-from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain_core.vectorstores import InMemoryVectorStore
-from langchain_core.documents import Document
-
 from langchain_openai import ChatOpenAI, OpenAIEmbeddings
-from langchain_core.documents import Document
 from langchain_core.tools import tool
 from langgraph.graph import  MessagesState, StateGraph, START
-from typing import List
-from typing_extensions import  TypedDict
 from langchain_core.messages import SystemMessage
 from langgraph.prebuilt import ToolNode
-
-
 from langgraph.graph import END
 from langgraph.prebuilt import ToolNode, tools_condition
+from langchain_mongodb import MongoDBAtlasVectorSearch
+from pymongo import MongoClient
+import os 
 
+# language model, used for text generation
+llm = ChatOpenAI(model="gpt-3.5-turbo")
 
+# embeddings model
+embeddings = OpenAIEmbeddings(model="text-embedding-3-large", dimensions=1536)
 
-with open("./sample_document.txt", "r") as file:
-    content = file.read()
-    document = Document(page_content=content)
-    
-text_splitter = RecursiveCharacterTextSplitter(
-    chunk_size=1000,
-    chunk_overlap=200,
-    add_start_index=True,
+# documents store init
+MONGODB_ATLAS_CLUSTER_URI = os.getenv('MONGODB_ATLAS_CLUSTER_URI')
+
+DB_NAME = "nhs_conditions_A_Z"
+COLLECTION_NAME = "conditions"
+ATLAS_VECTOR_SEARCH_INDEX_NAME = "conditions_index"
+
+client = MongoClient(MONGODB_ATLAS_CLUSTER_URI)
+MONGODB_COLLECTION = client[DB_NAME][COLLECTION_NAME]
+
+vector_store = MongoDBAtlasVectorSearch(
+    collection=MONGODB_COLLECTION,
+    embedding=embeddings,
+    index_name=ATLAS_VECTOR_SEARCH_INDEX_NAME,
+    relevance_score_fn="cosine",
 )
 
-all_splits = text_splitter.split_documents([document])
-    
-embeddings = OpenAIEmbeddings(model="text-embedding-3-large")
-vector_store = InMemoryVectorStore(embeddings)
-vector_store.add_documents(all_splits)
-
-
-llm = ChatOpenAI(model="gpt-3.5-turbo")
-# Create a tool that retrieves relavant documents given a query
+# Retrieves relavant documents given a query
 # this tool is used by the llm
 @tool(response_format="content_and_artifact")
 def retrieve(query: str):
-    """Retrieve information related to a query."""
+    """
+    Retrieve context information related to a query.
+    
+    Args:
+        query - The query to search
+    
+    """
     retrieved_docs = vector_store.similarity_search(query, k=5)
     serialized = "\n\n".join(
         (f"Source: {doc.metadata}\n" f"Content: {doc.page_content}")
@@ -62,8 +64,6 @@ def query_or_respond(state: MessagesState):
 # Step 2: Execute the retrieval.
 tools = ToolNode([retrieve])
 
-history = {"messages": []}
-
 # Step 3: Generate a response using the retrieved content.
 def generate(state: MessagesState):
     """Generate answer."""
@@ -79,10 +79,10 @@ def generate(state: MessagesState):
     # Format into prompt
     docs_content = "\n\n".join(doc.content for doc in tool_messages)
     system_message_content = (
-        "You are an health care assistant chatbot for advising on treatments and self care. "
+        "You are an health care assistant chatbot for advising on treatments self care. "
         "Use the following pieces of retrieved context to explain "
         "what the user condition may relate to. The reterived content is from the NHS A-Z website."
-        "Keep your reponses consice and use simple language. "
+        "Keep your reponses consice and use simple language. Also, return the source of the orignal document with url"
         "\n\n"
         f"{docs_content}"
     )
@@ -93,7 +93,6 @@ def generate(state: MessagesState):
         or (message.type == "ai" and not message.tool_calls)
     ]
     prompt = [SystemMessage(system_message_content)] + conversation_messages
-
 
     # Run
     response = llm.invoke(prompt)
@@ -111,6 +110,7 @@ graph_builder.add_conditional_edges(
     tools_condition,
     {END : END, "tools": "tools"}
 )
+
 graph_builder.add_edge("tools", "generate")
 graph_builder.add_edge("generate", END)
 
