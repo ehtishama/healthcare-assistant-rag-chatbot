@@ -3,6 +3,7 @@
 ScrappedPDFs
 Ignore_JustLinks
 .env
+env
 .git
 __pycache__
 
