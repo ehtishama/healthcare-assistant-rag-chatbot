@@ -8,7 +8,7 @@ from langgraph.prebuilt import ToolNode, tools_condition
 from langchain_mongodb import MongoDBAtlasVectorSearch
 from pymongo import MongoClient
 import os 
-
+from langgraph.checkpoint.memory import MemorySaver
 # language model, used for text generation
 llm = ChatOpenAI(model="gpt-3.5-turbo")
 
@@ -77,22 +77,37 @@ def generate(state: MessagesState):
     tool_messages = recent_tool_messages[::-1]
 
     # Format into prompt
-    docs_content = "\n\n".join(doc.content for doc in tool_messages)
-    system_message_content = (
-        "You are an health care assistant chatbot for advising on treatments self care. "
-        "Use the following pieces of retrieved context to explain "
-        "what the user condition may relate to. The reterived content is from the NHS A-Z website."
-        "Keep your reponses consice and use simple language. Also, return the source of the orignal document with url"
-        "\n\n"
-        f"{docs_content}"
-    )
+    docs_content = "\n\n".join(doc.content for doc in tool_messages)    
+    
+    system_prompt_content = f"""
+        You are a healthcare assistant designed to provide concise and accurate medical advice to users about their health concerns. You will be provided with relevant documents from the NHS A-Z Health Conditions website. Each document includes its source URL and page title. 
+
+        Your responsibilities include:
+        1. Offering medical advice based on the provided context.
+        2. Suggesting possible treatments, self-care options, or next steps.
+        3. Advising the user on whether they should consider consulting a GP.
+
+        Always base your response on the documents provided and ensure your answer is helpful and clear. Include the source URL at the end of your response.
+
+        Input Details:
+        - **Contextual Information**: {docs_content}
+
+
+        Output Requirements:
+        1. Provide a concise response addressing the user's query.
+        2. Include actionable advice, such as suggested treatments or whether to seek medical attention.
+        3. Append the source URL(s) from the relevant document(s) at the end of your response.
+        """
+
+    
+    
     conversation_messages = [
         message
         for message in state["messages"]
         if message.type in ("human", "system")
         or (message.type == "ai" and not message.tool_calls)
     ]
-    prompt = [SystemMessage(system_message_content)] + conversation_messages
+    prompt = [SystemMessage(system_prompt_content)] + conversation_messages
 
     # Run
     response = llm.invoke(prompt)
@@ -114,5 +129,5 @@ graph_builder.add_conditional_edges(
 graph_builder.add_edge("tools", "generate")
 graph_builder.add_edge("generate", END)
 
-graph = graph_builder.compile()
+graph = graph_builder.compile(checkpointer=MemorySaver())
 

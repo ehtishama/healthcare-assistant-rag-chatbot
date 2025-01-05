@@ -3,10 +3,9 @@ from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 from nhs_rag import invoke_rag
 
-
 class MessageQuery(BaseModel):
     message: str
-    thread_id: str | None
+    thread_id: str | None = None
 
 app = FastAPI()
 
@@ -23,20 +22,12 @@ app.add_middleware(
     allow_headers=["*"],  
 )
 
-hardcoded_responses = {
-    "fever": "You might be experiencing the early stages of flu or a viral infection.",
-    "headache": "It could be a migraine, stress, or tension-related headache.",
-    "cough": "This could indicate a respiratory issue, such as cold, flu, or COVID-19.",
-    "fatigue": "Fatigue can result from various causes like poor sleep, stress, or an underlying condition."
-}
-
-
 @app.post("/query_health_condition/")
 async def query_health_condition(query: MessageQuery):
     message = query.message.lower()
     thread_id = query.thread_id
 
-    response = {"message": invoke_rag(message)}
+    response = {"message": invoke_rag(message, thread_id)}
     
     
     
