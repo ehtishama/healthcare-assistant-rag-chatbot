@@ -1,10 +1,25 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
+from fastapi.middleware.cors import CORSMiddleware
+
 
 class MessageQuery(BaseModel):
     message: str
 
 app = FastAPI()
+
+origins = [
+    "http://localhost:5173",  
+    "https://nhs-rag.netlify.app/" 
+]
+
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,  
+    allow_methods=["*"],  
+    allow_headers=["*"],  
+)
 
 hardcoded_responses = {
     "fever": "You might be experiencing the early stages of flu or a viral infection.",
