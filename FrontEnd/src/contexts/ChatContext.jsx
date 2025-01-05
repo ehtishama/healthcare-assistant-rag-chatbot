@@ -1,5 +1,6 @@
 import { createContext, useContext, useState } from "react";
 import { submitQuery } from "../services/apiQuery";
+import { v4 as uuidv4 } from "uuid";
 
 const ChatContext = createContext();
 
@@ -9,6 +10,7 @@ export const ChatProvider = ({ children }) => {
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
   const [showDefaultScreen, setShowDefaultScreen] = useState(true);
+  const [threadId, setThreadId] = useState(null);
 
   const addUserMsg = (data) => {
     setMessages((prev) => {
@@ -20,7 +22,7 @@ export const ChatProvider = ({ children }) => {
     try {
       setLoading(true);
       setShowDefaultScreen(false);
-      const response = await submitQuery(q);
+      const response = await submitQuery(q, threadId);
       setMessages((prev) => {
         return [...prev, { text: response.message, sender: "bot" }];
       });
@@ -40,6 +42,8 @@ export const ChatProvider = ({ children }) => {
         askBot,
         showDefaultScreen,
         setShowDefaultScreen,
+        threadId,
+        setThreadId,
       }}
     >
       {children}
