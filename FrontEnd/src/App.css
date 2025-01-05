@@ -1,0 +1,12 @@
+.markdown a {
+    color: blue;
+}
+
+.markdown p {
+    padding: 16;
+}
+
+.markdown ul {
+    list-style: circle;
+    padding: 16;
+}

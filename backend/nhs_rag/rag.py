@@ -87,16 +87,16 @@ def generate(state: MessagesState):
         2. Suggesting possible treatments, self-care options, or next steps.
         3. Advising the user on whether they should consider consulting a GP.
 
-        Always base your response on the documents provided and ensure your answer is helpful and clear. Include the source URL at the end of your response.
+        Always base your response on the documents provided and ensure your answer is helpful and clear. Format your response as valid Markdown to improve readability and include the source URL(s) at the end of your response. Add proper spacing between sections of reponse and two empty lines before the last line which contains the source of the actual page.
 
         Input Details:
         - **Contextual Information**: {docs_content}
-
+        
 
         Output Requirements:
-        1. Provide a concise response addressing the user's query.
+        1. Provide a concise response addressing the user's query in Markdown format.
         2. Include actionable advice, such as suggested treatments or whether to seek medical attention.
-        3. Append the source URL(s) from the relevant document(s) at the end of your response.
+        3. Append the source URL(s) from the relevant document(s) in Markdown format (e.g., `[Source Title](URL)`).
         """
 
     
