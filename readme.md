@@ -12,7 +12,7 @@ The project is developed as part of the MLH ["Hack for Hackers"](https://events.
 - **Scalable Backend**: Powered by MongoDB Atlas for efficient storage and retrieval of embeddings and documents.
 
 ## System Architecture
-![System Architecture](nhs-a-z-chatbot.png)
+![System Architecture](https://i.imgur.com/IhmQZIN.jpeg)
 
 ### Components:
 1. **Frontend**:
