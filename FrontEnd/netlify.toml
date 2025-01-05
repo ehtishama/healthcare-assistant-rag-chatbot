@@ -1,0 +1,7 @@
+[build]
+  base = "FrontEnd/app" # Path to your Vite app
+  publish = "FrontEnd/app/dist" # Path to Vite's build output directory
+  command = "npm run build" # Build command for Vite
+
+[dev]
+  framework = "vite" # Optional: Framework detection
