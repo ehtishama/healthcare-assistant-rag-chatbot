@@ -1,13 +1,13 @@
-const API_URL = 'http://127.0.0.1:8000/query_health_condition/';
+const API_URL = "http://127.0.0.1:8000/query_health_condition/";
 
-export async function submitQuery(q) {
+export async function submitQuery(q, thread_id) {
   try {
     const response = await fetch(`${API_URL}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ message: q }),
+      body: JSON.stringify({ message: q, thread_id }),
     });
 
     if (!response.ok) {
