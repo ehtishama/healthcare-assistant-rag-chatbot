@@ -1,4 +1,4 @@
-# Healthcare Assistant RAG Model
+# Healthcare Assistant RAG Chatbot
 
 ## Overview
 This project is a Healthcare Assistant built using a Retrieval-Augmented Generation (RAG) model. The system provides accurate and relevant healthcare advice based on user queries by retrieving information from the [NHS A-Z website](https://www.nhs.uk/health-a-z) and augmenting it with a Large Language Model (LLM). 
@@ -12,7 +12,7 @@ The project is developed as part of the MLH ["Hack for Hackers"](https://events.
 - **Scalable Backend**: Powered by MongoDB Atlas for efficient storage and retrieval of embeddings and documents.
 
 ## System Architecture
-![System Architecture](nhs-a-z-chatbot.png)
+![System Architecture](https://i.imgur.com/IhmQZIN.jpeg)
 
 ### Components:
 1. **Frontend**:
