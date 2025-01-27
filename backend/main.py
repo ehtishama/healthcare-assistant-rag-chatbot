@@ -29,6 +29,4 @@ async def query_health_condition(query: MessageQuery):
 
     response = {"message": invoke_rag(message, thread_id)}
     
-    
-    
     return response
