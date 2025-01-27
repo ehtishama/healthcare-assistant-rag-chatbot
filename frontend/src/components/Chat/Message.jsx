@@ -9,13 +9,13 @@ function Message({ message, sender }) {
         isUser ? "justify-end" : "justify-start"
       }`}
     >
-      <p
+      <article
         className={`markdown space-y-4 rounded-lg py-[10px] px-[20px]  max-w-max ${
           isUser ? "bg-gray-200 justify-end" : ""
         }`}
       >
         {isUser ? message : <Markdown>{message}</Markdown>}
-      </p>
+      </article>
     </div>
   );
 }
