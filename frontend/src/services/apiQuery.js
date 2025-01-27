@@ -1,4 +1,4 @@
-const API_URL = "http://127.0.0.1:8000/query_health_condition/";
+const API_URL = import.meta.env.VITE_API_BASE_URL;
 
 export async function submitQuery(q, thread_id) {
   try {
