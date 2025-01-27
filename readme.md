@@ -5,12 +5,6 @@ This project is a Healthcare Assistant built using a Retrieval-Augmented Generat
 
 The project is developed as part of the MLH ["Hack for Hackers"](https://events.mlh.io/events/11516) hackathon.
 
-## Features
-- **Comprehensive Healthcare Information**: The system leverages the NHS A-Z data, which covers a wide range of medical conditions, treatments, self-care advice, and medicines.
-- **Retrieval-Augmented Generation (RAG)**: Combines a vector similarity search with an LLM to deliver personalized and accurate responses.
-- **Efficient Query Handling**: For each query, the system retrieves the most relevant documents from the database to enhance the LLM's output.
-- **Scalable Backend**: Powered by MongoDB Atlas for efficient storage and retrieval of embeddings and documents.
-
 ## System Architecture
 ![System Architecture](https://i.imgur.com/IhmQZIN.jpeg)
 
@@ -44,48 +38,77 @@ The primary data source is the [NHS A-Z website](https://www.nhs.uk/conditions/)
 - **Embedding Generation**: OpenAI embeddings API
 
 ## Installation and Setup
-1. Clone the repository:
+
+### Prerequisites
+1. **Docker**: Ensure Docker is installed on your machine.
+2. **MongoDB**: A MongoDB instance is required for data storage.
+3. **OpenAI API Key**: Obtain an API key from OpenAI.
+
+---
+
+### Initial Setup (Required for both options)
+
+1. **Clone the repository**:
    ```bash
    git clone <repository-url>
-   cd nhs-rag
+   cd healthcare-assistant-rag-chatbot
    ```
 
-2. Install dependencies for the backend:
+2. **Scrape and populate data**:
+   * Navigate to the `notebooks` folder and run `scrapper_mongodb.ipynb` to populate MongoDB with required data.
+
+### Option 1: Running Locally
+
+1. **Set up the backend**:
    ```bash
-   cd rest
-   npm pip install -r requirements.txt
+   cd backend
    ```
-
-3. Install dependencies for the web scraper:
-   ```bash
-   cd scraper
-   pip install -r requirements.txt
-   ```
-
-4. Set up environment variables:
-   Create a `.env` file in the `rest` directory with the following details:
+   
+   Create a `.env` file with the following environment variables:
    ```env
    MONGODB_ATLAS_CLUSTER_URI=<your-mongodb-atlas-uri>
    OPENAI_API_KEY=<your-openai-api-key>
-   NHS_URL=https://www.nhs.uk/conditions/
    ```
 
-5. Run the web scraper to populate the database:
-   ```bash
-   python scraper/scraper.py
-   ```
-
-6. Start the backend server:
+   Start the backend server:
    ```bash
    fastapi dev main.py
    ```
 
-7. Run the frontend (optional):
+2. **Set up the frontend**:
    ```bash
-   cd frontend
-   npm install
-   npm start
+   cd ../frontend
    ```
+   
+   Create a `.env` file with the following environment variable:
+   ```env
+   API_BASE_URL=<backend-server-url>  # e.g., http://localhost:8000
+   ```
+
+   Install dependencies and start the frontend:
+   ```bash
+   npm install
+   npm run dev
+   ```
+
+### Option 2: Running with Docker
+
+1. **Update Docker Compose file**:
+   * Open the `compose.yaml` file and update the following environment variables:
+     ```yaml
+     environment:
+       OPENAI_API_KEY: <your-openai-api-key>
+       MONGODB_ATLAS_CLUSTER_URI: <your-mongodb-atlas-uri>
+     ```
+
+2. **Run Docker Compose**:
+   ```bash
+   docker compose up
+   ```
+
+3. **Access the application**:
+   * Once the containers are running, go to `http://localhost:8080` in your browser to access the application.
+
 
 ## How It Works
 1. **User Query**: The user submits a query through the frontend.
